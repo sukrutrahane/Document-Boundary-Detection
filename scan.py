@@ -40,21 +40,23 @@ print("STEP 1: Edge Detection")
 # cv2.imshow("Image", image)
 cv2.imshow("Edged", edged)
 
-# finding the contours in the edged image, keeping only the
-# largest ones, and initialize the screen contour
-cnts = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-
 ## What are Contours ?
 ## Contours can be explained simply as a curve joining all the continuous
 ## points (along the boundary), having same color or intensity. 
 ## The contours are a useful tool for shape analysis and object detection 
 ## and recognition.
 
-# Handling due to different version of OpenCV
-cnts = cnts[0] if imutils.is_cv2() else cnts[1]
+# Find contours
+cnts, _ = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+print(f"Number of contours found: {len(cnts)}")
 
-# Taking only the top 5 contours by Area
-cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:5]
+# Handle empty contours
+if len(cnts) > 0:
+    cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:5]
+    print("Contours sorted successfully.")
+else:
+    print("No contours found!")
+    exit(0)
 
 ### Heuristic & Assumption
 
